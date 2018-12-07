@@ -1,2 +1,2 @@
 #!/bin/sh
-docker build --build-arg HADOOP_VERSION=2.6.5 --build_arg SPARK_VERSION=2.4.0 -t $IMAGE_NAME .
+docker build --build-arg HADOOP_VERSION=2.6.5 --build-arg SPARK_VERSION=2.4.0 -t $IMAGE_NAME .
