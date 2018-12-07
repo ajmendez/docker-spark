@@ -1,6 +1,16 @@
 
 # spark
 
+You probably want https://github.com/gettyimages/docker-spark. This repo is for testing.
+
+ARGS:
+    * SPARK_VERSION
+    * HADOOP_VERSION
+
+
+
+
+
 A `debian:stretch` based [Spark](http://spark.apache.org) container. Use it in a standalone cluster with the accompanying `docker-compose.yml`, or as a base for more complex recipes.
 
 ## docker example
