@@ -29,24 +29,31 @@ ENV PYTHONHASHSEED 0
 ENV PYTHONIOENCODING UTF-8
 ENV PIP_DISABLE_PIP_VERSION_CHECK 1
 
-# JAVA
-ARG JAVA_MAJOR_VERSION=8
-ARG JAVA_UPDATE_VERSION=192
-ARG JAVA_BUILD_NUMBER=12
-ENV JAVA_HOME /usr/jdk1.${JAVA_MAJOR_VERSION}.0_${JAVA_UPDATE_VERSION}
 
-ENV PATH $PATH:$JAVA_HOME/bin
-RUN curl -sL --retry 3 --insecure \
-  --header "Cookie: oraclelicense=accept-securebackup-cookie;" \
-  "http://download.oracle.com/otn-pub/java/jdk/${JAVA_MAJOR_VERSION}u${JAVA_UPDATE_VERSION}-b${JAVA_BUILD_NUMBER}/750e1c8617c5452694857ad95c3ee230/server-jre-${JAVA_MAJOR_VERSION}u${JAVA_UPDATE_VERSION}-linux-x64.tar.gz" \
-  | gunzip \
-  | tar x -C /usr/ \
-  && ln -s $JAVA_HOME /usr/java \
-  && rm -rf $JAVA_HOME/man
+# JAVA
+RUN apt-get update \
+ && apt-get install -y openjdk-8-jre \
+ && apt-get clean \
+ && rm -rf /var/lib/apt/lists/*
+ 
+# JAVA
+# ARG JAVA_MAJOR_VERSION=8
+# ARG JAVA_UPDATE_VERSION=192
+# ARG JAVA_BUILD_NUMBER=12
+# ENV JAVA_HOME /usr/jdk1.${JAVA_MAJOR_VERSION}.0_${JAVA_UPDATE_VERSION}
+#
+# ENV PATH $PATH:$JAVA_HOME/bin
+# RUN curl -sL --retry 3 --insecure \
+#   --header "Cookie: oraclelicense=accept-securebackup-cookie;" \
+#   "http://download.oracle.com/otn-pub/java/jdk/${JAVA_MAJOR_VERSION}u${JAVA_UPDATE_VERSION}-b${JAVA_BUILD_NUMBER}/750e1c8617c5452694857ad95c3ee230/server-jre-${JAVA_MAJOR_VERSION}u${JAVA_UPDATE_VERSION}-linux-x64.tar.gz" \
+#   | gunzip \
+#   | tar x -C /usr/ \
+#   && ln -s $JAVA_HOME /usr/java \
+#   && rm -rf $JAVA_HOME/man
 
 # HADOOP
-# ARG HADOOP_VERSION=2.6.5
-ARG HADOOP_VERSION=2.9.2
+ARG HADOOP_VERSION=2.6.5
+# ARG HADOOP_VERSION=2.9.2
 
 ENV HADOOP_HOME /usr/hadoop-$HADOOP_VERSION
 ENV HADOOP_CONF_DIR=$HADOOP_HOME/etc/hadoop
@@ -59,8 +66,8 @@ RUN curl -sL --retry 3 \
  && chown -R root:root $HADOOP_HOME
 
 # SPARK
-# ARG SPARK_VERSION=2.1.3
-ARG SPARK_VERSION=2.3.2
+ARG SPARK_VERSION=2.1.3
+# ARG SPARK_VERSION=2.3.2
 ENV SPARK_PACKAGE spark-${SPARK_VERSION}-bin-without-hadoop
 ENV SPARK_HOME /usr/spark-${SPARK_VERSION}
 ENV SPARK_DIST_CLASSPATH="$HADOOP_HOME/etc/hadoop/*:$HADOOP_HOME/share/hadoop/common/lib/*:$HADOOP_HOME/share/hadoop/common/*:$HADOOP_HOME/share/hadoop/hdfs/*:$HADOOP_HOME/share/hadoop/hdfs/lib/*:$HADOOP_HOME/share/hadoop/hdfs/*:$HADOOP_HOME/share/hadoop/yarn/lib/*:$HADOOP_HOME/share/hadoop/yarn/*:$HADOOP_HOME/share/hadoop/mapreduce/lib/*:$HADOOP_HOME/share/hadoop/mapreduce/*:$HADOOP_HOME/share/hadoop/tools/lib/*"
